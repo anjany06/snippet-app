@@ -28,9 +28,8 @@ export const deleteSnippet = async(id:number)=>{
 
 export async function createSnippet(prevState: {message:string},formData: FormData) {
 
-// using error.tsx and try catch for error handling
+  // using error.tsx and try catch for error handling
   //and sath hi hme try catch use krnaa pdega thbi usi ui k bagl me ayega wrna ek new page me error.message ayega
-
   try {
     const title = formData.get("title");
     const code = formData.get("code");
@@ -45,7 +44,7 @@ export async function createSnippet(prevState: {message:string},formData: FormDa
     // ab hme data ko db me save krna hai / ya migrate krna h
     // toh ek cmd use krenge npx prisma migrate dev --name added snippet model
   
-  await prisma.snippet.create({
+    await prisma.snippet.create({
       data: {
         title,
         code,
@@ -59,6 +58,5 @@ export async function createSnippet(prevState: {message:string},formData: FormDa
   }
  
 
-  // ish redirect hmesha try catch k bahr rkhna as it behaves differently and shows error when we put in trycatch
   redirect("/"); //yeh ssr comp hai
 }
