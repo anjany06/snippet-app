@@ -1,33 +1,22 @@
-import React from "react";
+"use client";
+import React, { useActionState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import * as actions from "@/actions";
 
 const CreateSnippetPage = () => {
-  async function createSnippet(formData: FormData) {
-    "use server"; // use server directive
-    const title = formData.get("title") as string; // typeAssertion kiya h kyuki ts h toh yeh keh rha h ki yeh null bhi ho skta hai but hme sure kiya ki isme 100 per data string hi ayega
-    const code = formData.get("code") as string;
+  const [formStateData, action] = useActionState(actions.createSnippet, {
+    message: "",
+  });
 
-    // ab hme data ko db me save krna hai / ya migrate krna h
-    // toh ek cmd use krenge npx prisma migrate dev --name added snippet model
-
-    const snippet = await prisma.snippet.create({
-      data: {
-        title,
-        code,
-      },
-    });
-
-    console.log("created snippet: ", snippet);
-
-    redirect("/"); //yeh ssr comp hai
-  }
+  //server action 2 things return kr rha h 1st)data returned by server actions
+  //2nd) action - yeh hamara updated action hai kuch bhi naam rkh skte hai
   return (
-    <form action={createSnippet}>
+    <form action={action}>
       <div>
         <Label>Title</Label>
         <Input type="text" name="title" id="title" />
@@ -36,6 +25,11 @@ const CreateSnippetPage = () => {
         <Label>Code</Label>
         <Textarea name="code" id="code" />
       </div>
+      {formStateData.message && (
+        <div className="p-2 m-2 bg-red-300 border-2 border-red-600">
+          {formStateData.message}
+        </div>
+      )}
       <Button type="submit" className="my-5">
         New
       </Button>
