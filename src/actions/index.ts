@@ -3,6 +3,8 @@
 import { prisma } from "@/lib/prisma"
 import { redirect } from "next/navigation"
 
+//on-demand caching
+import { revalidatePath } from "next/cache";
 // this is basically our server action
 
 export const saveSnippet = async(id:number, code: string ) =>{
@@ -23,6 +25,7 @@ export const deleteSnippet = async(id:number)=>{
       id,
     }
   });
+  revalidatePath("/");
   redirect('/')
 }
 
@@ -51,10 +54,15 @@ export async function createSnippet(prevState: {message:string},formData: FormDa
       },
     });
 
-    throw new Error("Something went wrong")
-  
-  } catch (error:any) {
-    return {message:error.message }
+    // throw new Error("Something went wrong")
+    revalidatePath("/");
+  } catch (error:unknown) {
+    if ( error instanceof Error){
+      return {message:error.message }
+    }
+    else{
+      return {message:"Some interna server error" }
+    }
   }
  
 
