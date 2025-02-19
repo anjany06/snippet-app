@@ -27,27 +27,38 @@ export const deleteSnippet = async(id:number)=>{
 }
 
 export async function createSnippet(prevState: {message:string},formData: FormData) {
-  const title = formData.get("title");
-  const code = formData.get("code");
 
-  if(typeof title !== "string" || title.length< 4){
-    return{message:"Title is required and must be longer"};
+// using error.tsx and try catch for error handling
+  //and sath hi hme try catch use krnaa pdega thbi usi ui k bagl me ayega wrna ek new page me error.message ayega
+
+  try {
+    const title = formData.get("title");
+    const code = formData.get("code");
+  
+    if(typeof title !== "string" || title.length< 4){
+      return{message:"Title is required and must be longer"};
+    }
+    if(typeof code !== "string" || code.length< 4){
+      return {message:"Code is required and must be longer"};
+    }
+  
+    // ab hme data ko db me save krna hai / ya migrate krna h
+    // toh ek cmd use krenge npx prisma migrate dev --name added snippet model
+  
+  await prisma.snippet.create({
+      data: {
+        title,
+        code,
+      },
+    });
+
+    throw new Error("Something went wrong")
+  
+  } catch (error:any) {
+    return {message:error.message }
   }
-  if(typeof code !== "string" || code.length< 4){
-    return {message:"Code is required and must be longer"};
-  }
+ 
 
-  // ab hme data ko db me save krna hai / ya migrate krna h
-  // toh ek cmd use krenge npx prisma migrate dev --name added snippet model
-
-  const snippet = await prisma.snippet.create({
-    data: {
-      title,
-      code,
-    },
-  });
-
-  console.log("created snippet: ", snippet);
-
+  // ish redirect hmesha try catch k bahr rkhna as it behaves differently and shows error when we put in trycatch
   redirect("/"); //yeh ssr comp hai
 }
