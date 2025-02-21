@@ -5,8 +5,9 @@ import { redirect } from "next/navigation"
 
 //on-demand caching
 import { revalidatePath } from "next/cache";
-// this is basically our server action
 
+
+// this is basically our server action
 export const saveSnippet = async(id:number, code: string ) =>{
   await prisma.snippet.update({
     where:{

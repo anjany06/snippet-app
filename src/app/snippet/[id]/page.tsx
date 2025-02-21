@@ -3,9 +3,9 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import React from "react";
 import { deleteSnippet } from "@/actions";
-type SnippetDetailProps = {
-  params: Promise<{ id: string }>;
-};
+// type SnippetDetailProps = {
+//   params: Promise<{ id: string }>;
+// };
 const SnippetDetailPage = async ({
   params,
 }: {
@@ -48,3 +48,11 @@ const SnippetDetailPage = async ({
 };
 
 export default SnippetDetailPage;
+
+export const generateStaticParams = async () => {
+  const snippets = await prisma.snippet.findMany();
+
+  return snippets.map((snippet) => {
+    return { id: snippet.id.toString() };
+  });
+};

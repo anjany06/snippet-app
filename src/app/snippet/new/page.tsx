@@ -4,8 +4,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
+// import { prisma } from "@/lib/prisma";
+// import { redirect } from "next/navigation";
 import * as actions from "@/actions";
 
 const CreateSnippetPage = () => {
